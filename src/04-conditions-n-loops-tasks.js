@@ -332,10 +332,19 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const removeBalancedPairs = (s) => {
+    const balancedPairs = /\(\)|\[\]|\{\}|<>/g;
+    let newStr = s;
+    let prevStr;
+    do {
+      prevStr = newStr;
+      newStr = newStr.replace(balancedPairs, '');
+    } while (newStr !== prevStr);
+    return newStr;
+  };
+  return removeBalancedPairs(str) === '';
 }
-
 
 /**
  * Returns the string with n-ary (binary, ternary, etc, where n <= 10)
@@ -357,8 +366,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -374,8 +383,32 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const splitPaths = pathes.map((item) => item.split('/'));
+  const dim1 = splitPaths.length;
+  const dim2 = Math.min(...splitPaths.map((item) => item.length));
+  let res = '';
+
+  for (let j = 0; j < dim2; j += 1) {
+    const common = splitPaths[0][j];
+    let isSame = true;
+
+    for (let i = 1; i < dim1; i += 1) {
+      if (splitPaths[i][j] !== common) {
+        isSame = false;
+        break;
+      }
+    }
+
+    if (isSame) {
+      res = res.length === 0 ? '/' : `${res}/${common}`;
+    } else {
+      break;
+    }
+  }
+  res = res.length === 0 ? '' : `${res}/`;
+
+  return res.startsWith('//') ? res.slice(1) : res;
 }
 
 
@@ -432,8 +465,28 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  for (let i = 0; i < 3; i += 1) {
+    if (position[i][0] !== undefined && position[i][0] === position[i][1]
+      && position[i][0] === position[i][2]) {
+      return position[i][0];
+    }
+  }
+  for (let j = 0; j < 3; j += 1) {
+    if (position[0][j] !== undefined && position[0][j] === position[1][j]
+      && position[0][j] === position[2][j]) {
+      return position[0][j];
+    }
+  }
+  if (position[0][0] !== undefined && position[0][0] === position[1][1]
+    && position[0][0] === position[2][2]) {
+    return position[0][0];
+  }
+  if (position[0][2] !== undefined && position[0][2] === position[1][1]
+    && position[0][2] === position[2][0]) {
+    return position[0][2];
+  }
+  return undefined;
 }
 
 
